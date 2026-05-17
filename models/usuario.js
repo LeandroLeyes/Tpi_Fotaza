@@ -41,6 +41,11 @@ Usuario.init(
     bio: DataTypes.TEXT,
 
     avatar: DataTypes.TEXT,
+
+    rol: {
+      type: DataTypes.ENUM("usuario", "admin", "validador"),
+      defaultValue: "usuario",
+    },
   },
   {
     tableName: "usuarios",
