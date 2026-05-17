@@ -1,0 +1,228 @@
+/* =========================
+   GENERAL
+========================= */
+
+body{
+    margin: 0;
+    background-color: #F8F8F4;
+    font-family: sans-serif;
+}
+
+
+/* =========================
+   LAYOUT
+========================= */
+
+.app-layout{
+    display: flex;
+}
+
+.main-content{
+    margin-left: 90px;
+    width: 100%;
+}
+
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar{
+    width: 90px;
+    height: 100vh;
+
+    position: fixed;
+
+    background-color: white;
+
+    border-right: 1px solid #eaeaea;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 20px 0;
+
+    z-index: 1000;
+}
+
+.logo{
+    font-size: 30px;
+    color: #636B2F;
+}
+
+.sidebar-menu{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.sidebar-link{
+    width: 50px;
+    height: 50px;
+
+    border-radius: 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-decoration: none;
+
+    color: #444;
+
+    font-size: 22px;
+
+    transition: 0.2s ease;
+}
+
+.sidebar-link:hover{
+    background-color: #636B2F;
+    color: white;
+}
+
+.sidebar-link.active{
+    background-color: #636B2F;
+    color: white;
+}
+
+
+/* =========================
+   TOPBAR
+========================= */
+
+.topbar{
+    padding: 20px 30px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.search-container{
+    width: 100%;
+    max-width: 1400px;
+
+    position: relative;
+}
+
+.search-input{
+    width: 100%;
+
+    border: none;
+
+    background-color: #ECECE8;
+
+    padding: 16px 20px 16px 50px;
+
+    border-radius: 20px;
+
+    outline: none;
+}
+
+.search-icon{
+    position: absolute;
+
+    top: 50%;
+    left: 20px;
+
+    transform: translateY(-50%);
+
+    color: #666;
+}
+
+.user-avatar{
+    width: 45px;
+    height: 45px;
+
+    border-radius: 50%;
+
+    margin-left: 20px;
+}
+
+
+/* =========================
+   CONTENT
+========================= */
+
+.content-area{
+    padding: 0 30px 30px 30px;
+}
+
+
+/* =========================
+   MASONRY GRID
+========================= */
+
+.masonry-grid{
+    columns: 5 250px;
+    column-gap: 1rem;
+}
+
+
+/* =========================
+   CARD
+========================= */
+
+.article-card{
+    position: relative;
+
+    margin-bottom: 1rem;
+
+    break-inside: avoid;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+
+    cursor: pointer;
+}
+
+.card-image{
+    width: 100%;
+
+    display: block;
+
+    border-radius: 20px;
+
+    transition: 0.3s ease;
+}
+
+.article-card:hover .card-image{
+    filter: brightness(0.8);
+}
+
+.card-overlay{
+    position: absolute;
+
+    inset: 0;
+
+    opacity: 0;
+
+    transition: 0.3s ease;
+}
+
+.article-card:hover .card-overlay{
+    opacity: 1;
+}
+
+.save-btn{
+    position: absolute;
+
+    top: 15px;
+    right: 15px;
+
+    border: none;
+
+    background-color: #636B2F;
+
+    color: white;
+
+    width: 45px;
+    height: 45px;
+
+    border-radius: 50%;
+
+    font-size: 18px;
+}
