@@ -17,8 +17,8 @@ Comentario.init(
     },
   },
   {
+    sequelize,
     tableName: "comentarios",
-
     timestamps: true,
     paranoid: true,
   },

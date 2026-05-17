@@ -1,4 +1,4 @@
-import { Model, DataType } from "sequelize";
+import { Model, DataTypes } from "sequelize";
 import sequelize from "./config.js";
 
 export class Seguimiento extends Model {}
@@ -12,8 +12,8 @@ Seguimiento.init(
     },
   },
   {
+    sequelize,
     tableName: "seguimientos",
-
     timestamps: true,
     paranoid: true,
   },

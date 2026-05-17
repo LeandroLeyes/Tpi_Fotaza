@@ -12,8 +12,8 @@ Interes.init(
     },
   },
   {
+    sequelize,
     tableName: "intereses",
-
     timestamps: true,
     paranoid: true,
   },

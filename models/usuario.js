@@ -48,8 +48,8 @@ Usuario.init(
     },
   },
   {
+    sequelize,
     tableName: "usuarios",
-
     timestamps: true,
     paranoid: true,
   },

@@ -24,8 +24,8 @@ Publicacion.init(
     },
   },
   {
+    sequelize,
     tableName: "publicaciones",
-
     timestamps: true,
     paranoid: true,
   },

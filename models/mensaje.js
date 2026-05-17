@@ -17,8 +17,8 @@ Mensaje.init(
     },
   },
   {
+    sequelize,
     tableName: "mensajes",
-
     timestamps: true,
     paranoid: true,
   },

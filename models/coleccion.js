@@ -1,4 +1,4 @@
-import { Model, DataType } from "seuquelize";
+import { Model, DataTypes } from "seuquelize";
 import sequelize from "./config.js";
 
 export class Coleccion extends Model {}
@@ -17,8 +17,8 @@ Coleccion.init(
     },
   },
   {
+    sequelize,
     tableName: "colecciones",
-
     timestamps: true,
     paranoid: true,
   },

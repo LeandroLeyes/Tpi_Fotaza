@@ -12,8 +12,8 @@ Chat.init(
     },
   },
   {
+    sequelize,
     tableName: "chats",
-
     timestamps: true,
     paranoid: true,
   },

@@ -1,4 +1,4 @@
-import { sequelize } from "../config/database.js";
+import { sequelize } from "./config.js";
 
 import { Usuario } from "./usuario.js";
 import { Publicacion } from "./publicacion.js";
@@ -25,7 +25,7 @@ Usuario.hasMany(Comentario);
 Comentario.belongsTo(Usuario);
 
 // Publicacion - Comentario
-blicacion.hasMany(Comentario);
+Publicacion.hasMany(Comentario);
 
 Comentario.belongsTo(Publicacion);
 

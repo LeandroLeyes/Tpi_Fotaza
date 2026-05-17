@@ -21,8 +21,8 @@ Imagen.init(
     marcaAgua: DataTypes.STRING,
   },
   {
+    sequelize,
     tableName: "imagenes",
-
     timestamps: true,
     paranoid: true,
   },

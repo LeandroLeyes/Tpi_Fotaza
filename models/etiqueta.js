@@ -1,4 +1,4 @@
-import { Model, DataType } from "sequelize";
+import { Model, DataTypes } from "sequelize";
 import sequelize from "./config.js";
 
 export class Etiqueta extends Model {}
@@ -17,8 +17,8 @@ Etiqueta.init(
     },
   },
   {
+    sequelize,
     tableName: "etiquetas",
-
     timestamps: true,
     paranoid: true,
   },

@@ -21,8 +21,8 @@ Notificacion.init(
     },
   },
   {
+    sequelize,
     tableName: "notificaciones",
-
     timestamps: true,
     paranoid: true,
   },

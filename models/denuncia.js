@@ -18,8 +18,8 @@ Denuncia.init(
     tipo: DataTypes.STRING,
   },
   {
+    sequelize,
     tableName: "denuncias",
-
     timestamps: true,
     paranoid: true,
   },

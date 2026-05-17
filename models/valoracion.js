@@ -17,8 +17,8 @@ Valoracion.init(
     },
   },
   {
+    sequelize,
     tableName: "valoraciones",
-
     timestamps: true,
     paranoid: true,
   },
