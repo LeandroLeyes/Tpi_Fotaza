@@ -16,7 +16,7 @@ Imagen.init(
       allowNull: false,
     },
 
-    licencia: DataTypes.STRING,
+    copyright: DataTypes.BOOLEAN,
 
     marcaAgua: DataTypes.STRING,
   },

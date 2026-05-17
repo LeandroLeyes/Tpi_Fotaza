@@ -1,4 +1,4 @@
-import { sequelize } from "./config.js";
+import sequelize from "./config.js";
 
 import { Usuario } from "./usuario.js";
 import { Publicacion } from "./publicacion.js";
