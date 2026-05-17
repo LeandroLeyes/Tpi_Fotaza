@@ -12,7 +12,7 @@ Imagen.init(
     },
 
     url: {
-      type: DataTypes.STRING,
+      type: DataTypes.BLOB,
       allowNull: false,
     },
 

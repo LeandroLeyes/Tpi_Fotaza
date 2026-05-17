@@ -40,7 +40,7 @@ Usuario.init(
 
     bio: DataTypes.TEXT,
 
-    avatar: DataTypes.TEXT,
+    avatar: DataTypes.BLOB,
 
     rol: {
       type: DataTypes.ENUM("usuario", "admin", "validador"),
