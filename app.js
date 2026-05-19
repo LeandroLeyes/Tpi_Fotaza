@@ -1,8 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import path from "path";
-
-import viewsRouter from "./routes/views.routes.js";
+import routes from "./routes/views.routes.js";
 import { connectDatabase } from "./models/sync.js";
 
 //CONSTANTES
@@ -25,7 +24,7 @@ app.set("view engine", "pug");
 app.set("views", "./views");
 
 // RUTAS
-app.use("/", viewsRouter);
+app.use(routes);
 
 // CONEXION A BD
 connectDatabase()

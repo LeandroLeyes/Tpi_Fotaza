@@ -1,29 +1,15 @@
 import { Router } from "express";
 
+import authRoutes from "./auth.routes.js";
+import landingRoutes from "./landing.routes.js";
+import homeRoutes from "./home.routes.js";
+
 const router = Router();
 
-router.get("/", (req, res) => {
-  res.render("landing/index", {
-    title: "Fotaza",
-  });
-});
+router.use("/", landingRoutes);
 
-router.get("/home", (req, res) => {
-  res.render("home/index", {
-    title: "Inicio",
-  });
-});
+router.use("/", authRoutes);
 
-router.get("/login", (req, res) => {
-  res.render("auth/login", {
-    title: "Login",
-  });
-});
-
-router.get("/register", (req, res) => {
-  res.render("auth/register", {
-    title: "Registro",
-  });
-});
+router.use("/home", homeRoutes);
 
 export default router;
