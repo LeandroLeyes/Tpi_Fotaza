@@ -24,10 +24,10 @@ Usuario.hasMany(Comentario);
 
 Comentario.belongsTo(Usuario);
 
-// Publicacion - Comentario
-Publicacion.hasMany(Comentario);
+// Imagen - Comentario
+Imagen.hasMany(Comentario);
 
-Comentario.belongsTo(Publicacion);
+Comentario.belongsTo(Imagen);
 
 // Publicacion - Imagen
 Publicacion.hasMany(Imagen);
@@ -51,22 +51,22 @@ Chat.belongsTo(Interes);
 
 // Chat - Usuario
 Usuario.hasMany(Chat, {
-  foreignKey: "emisorId",
+  foreignKey: "idEmisor",
   as: "chatsEnviados",
 });
 
 Usuario.hasMany(Chat, {
-  foreignKey: "destinoId",
+  foreignKey: "idDestino",
   as: "chatsRecibidos",
 });
 
 Chat.belongsTo(Usuario, {
-  foreignKey: "emisorId",
+  foreignKey: "idEmisor",
   as: "emisor",
 });
 
 Chat.belongsTo(Usuario, {
-  foreignKey: "destinoId",
+  foreignKey: "idDestino",
   as: "destino",
 });
 
@@ -117,48 +117,48 @@ Publicacion.belongsToMany(Coleccion, {
 Usuario.belongsToMany(Usuario, {
   through: Seguimiento,
   as: "seguidos",
-  foreignKey: "seguidorId",
-  otherKey: "seguidoId",
+  foreignKey: "idSeguidor",
+  otherKey: "idSeguido",
 });
 
 // Usuario - Denuncia
 Usuario.hasMany(Denuncia, {
-  foreignKey: "usuarioId",
+  foreignKey: "idUsuario",
 });
 
 Denuncia.belongsTo(Usuario, {
-  foreignKey: "usuarioId",
+  foreignKey: "idUsuario",
 });
 
 // Validador - Denuncia
 Usuario.hasMany(Denuncia, {
-  foreignKey: "validadorId",
+  foreignKey: "idValidador",
   as: "denunciasValidadas",
 });
 
 Denuncia.belongsTo(Usuario, {
-  foreignKey: "validadorId",
+  foreignKey: "idValidador",
   as: "validador",
 });
 
 // Usuario - Notificacion
 Usuario.hasMany(Notificacion, {
-  foreignKey: "usuarioDestinoId",
+  foreignKey: "idUsuarioDestino",
   as: "notificacionesRecibidas",
 });
 
 Usuario.hasMany(Notificacion, {
-  foreignKey: "usuarioOrigenId",
+  foreignKey: "idUsuarioOrigen",
   as: "notificacionesEnviadas",
 });
 
 Notificacion.belongsTo(Usuario, {
-  foreignKey: "usuarioDestinoId",
+  foreignKey: "idUsuarioDestino",
   as: "destino",
 });
 
 Notificacion.belongsTo(Usuario, {
-  foreignKey: "usuarioOrigenId",
+  foreignKey: "idUsuarioOrigen",
   as: "origen",
 });
 
