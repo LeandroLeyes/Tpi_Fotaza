@@ -17,19 +17,27 @@ block content
           | Unite a Fotaza
 
 
-      form
+      form(action= "/register", method="post")
 
         .mb-3
 
-          input.form-control.auth-input(type="text",placeholder="Nombre de usuario")
+          input.form-control.auth-input(type="text", name="username", placeholder="Nombre de usuario")
 
         .mb-3
 
-          input.form-control.auth-input(type="email", placeholder="Correo electrónico")
+          input.form-control.auth-input(type="text", name="name", placeholder="Nombre")
+
+        .mb-3
+
+          input.form-control.auth-input(type="text", name="lastName", placeholder="Apellido")
+
+        .mb-3
+
+          input.form-control.auth-input(type="email", name="email", placeholder="Correo electrónico")
 
         .mb-4
 
-          input.form-control.auth-input(type="password", placeholder="Contraseña")
+          input.form-control.auth-input(type="password", name="password", placeholder="Contraseña")
 
         button.btn.auth-btn.w-100(type="submit")
           | Registrarse

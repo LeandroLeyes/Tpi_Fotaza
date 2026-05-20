@@ -11,7 +11,7 @@ Usuario.init(
       autoIncrement: true,
     },
 
-    firstName: {
+    name: {
       type: DataTypes.STRING(50),
       allowNull: false,
     },

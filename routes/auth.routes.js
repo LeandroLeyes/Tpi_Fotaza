@@ -1,4 +1,8 @@
 import { Router } from "express";
+import {
+  registroUsuario,
+  inicioSesion,
+} from "../controllers/auth.controller.js";
 
 const auth = Router();
 auth.get("/login", (req, res) => {
@@ -7,12 +11,7 @@ auth.get("/login", (req, res) => {
   });
 });
 
-auth.post("/login", (req, res) => {
-  // TODO: Aquí iría la lógica de autenticación
-
-  // si esta todo ok => luego de redirecciona al home
-  res.redirect("/home");
-});
+auth.post("/login", inicioSesion);
 
 auth.get("/register", (req, res) => {
   res.render("auth/register", {
@@ -20,11 +19,6 @@ auth.get("/register", (req, res) => {
   });
 });
 
-auth.post("/register", (req, res) => {
-  // TODO: Aquí iría la lógica de registro de usuario
-
-  // si esta todo ok => luego de redirecciona al home
-  res.redirect("/home");
-});
+auth.post("/register", registroUsuario);
 
 export default auth;

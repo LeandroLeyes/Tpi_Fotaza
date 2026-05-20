@@ -3,6 +3,7 @@ import express from "express";
 import path from "path";
 import routes from "./routes/views.routes.js";
 import { connectDatabase } from "./models/sync.js";
+import session from "express-session";
 
 //CONSTANTES
 const PORT = process.env.PORT;
@@ -22,6 +23,16 @@ app.use(
 // MOTOR DE PLANTILLAS
 app.set("view engine", "pug");
 app.set("views", "./views");
+
+//AUTENTICACION
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    //cookie: { secure: true } /*Solo usar si utilizamos cookies*/
+  }),
+);
 
 // RUTAS
 app.use(routes);
