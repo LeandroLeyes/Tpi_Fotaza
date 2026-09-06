@@ -181,11 +181,11 @@ export async function crearComentario(req, res) {
     });
 
     if (!imagen) {
-      return res.redirect(`/usuario/publicaciones/${idPublicacion}`);
+      return res.redirect(`/publicaciones/${idPublicacion}`);
     }
 
     if (!imagen.Publicacion.comentariosActivo) {
-      return res.redirect(`/usuario/publicaciones/${imagen.idPublicacion}`);
+      return res.redirect(`/publicaciones/${imagen.idPublicacion}`);
     }
 
     await Comentario.create({
@@ -202,10 +202,10 @@ export async function crearComentario(req, res) {
       imagen.Publicacion.id,
     );
 
-    return res.redirect(`/usuario/publicaciones/${imagen.idPublicacion}`);
+    return res.redirect(`/publicaciones/${imagen.idPublicacion}`);
   } catch (error) {
     console.error("Error al crear comentario:", error);
-    return res.redirect(`/usuario/publicaciones/${req.body.idPublicacion}`);
+    return res.redirect(`/publicaciones/${req.body.idPublicacion}`);
   }
 }
 
@@ -228,7 +228,7 @@ export async function valorarImagen(req, res) {
       imagen.Publicacion.idUsuario === req.session.usuario.id;
 
     if (esPropietario) {
-      return res.redirect(`/usuario/publicaciones/${imagen.idPublicacion}`);
+      return res.redirect(`/publicaciones/${imagen.idPublicacion}`);
     }
 
     const puntaje = Number(req.body.puntaje);
@@ -258,7 +258,7 @@ export async function valorarImagen(req, res) {
       );
     }
 
-    return res.redirect(`/usuario/publicaciones/${imagen.idPublicacion}`);
+    return res.redirect(`/publicaciones/${imagen.idPublicacion}`);
   } catch (error) {
     console.error(error);
     res.send("Error al valorar imagen");
@@ -276,7 +276,7 @@ export async function cambiarEstadoComentarios(req, res) {
 
   await publicacion.save();
 
-  res.redirect(`/usuario/publicaciones/${publicacion.id}`);
+  res.redirect(`/publicaciones/${publicacion.id}`);
 }
 
 export async function eliminarPublicacion(req, res) {
@@ -288,7 +288,7 @@ export async function eliminarPublicacion(req, res) {
     }
 
     if (publicacion.idUsuario !== req.session.usuario.id) {
-      return res.redirect(`/usuario/publicaciones/${publicacion.id}`);
+      return res.redirect(`/publicaciones/${publicacion.id}`);
     }
 
     await publicacion.destroy();
@@ -309,7 +309,7 @@ export async function mostrarFormEditar(req, res) {
     if (!publicacion) return res.redirect("/usuario/home");
 
     if (publicacion.idUsuario !== req.session.usuario.id) {
-      return res.redirect(`/usuario/publicaciones/${publicacion.id}`);
+      return res.redirect(`/publicaciones/${publicacion.id}`);
     }
 
     const tieneDenunciasPendientes =
@@ -322,7 +322,7 @@ export async function mostrarFormEditar(req, res) {
       })) > 0;
 
     if (tieneDenunciasPendientes) {
-      return res.redirect(`/usuario/publicaciones/${publicacion.id}`);
+      return res.redirect(`/publicaciones/${publicacion.id}`);
     }
 
     const pub = publicacion.toJSON();
@@ -352,7 +352,7 @@ export async function editarPublicacion(req, res) {
     if (!publicacion) return res.redirect("/usuario/home");
 
     if (publicacion.idUsuario !== req.session.usuario.id) {
-      return res.redirect(`/usuario/publicaciones/${publicacion.id}`);
+      return res.redirect(`/publicaciones/${publicacion.id}`);
     }
 
     const volverAlForm = async (errores) => {
@@ -379,9 +379,7 @@ export async function editarPublicacion(req, res) {
       })) > 0;
 
     if (tieneDenunciasPendientes) {
-      return res.redirect(
-        `/usuario/publicaciones/${publicacion.id}?error=denuncia`,
-      );
+      return res.redirect(`/publicaciones/${publicacion.id}?error=denuncia`);
     }
 
     const { editarPublicacionSchema } =
@@ -457,10 +455,10 @@ export async function editarPublicacion(req, res) {
       }
     }
 
-    return res.redirect(`/usuario/publicaciones/${publicacion.id}`);
+    return res.redirect(`/publicaciones/${publicacion.id}`);
   } catch (error) {
     console.error("Error al editar publicación:", error);
-    return res.redirect(`/usuario/publicaciones/${req.params.id}`);
+    return res.redirect(`/publicaciones/${req.params.id}`);
   }
 }
 
@@ -473,16 +471,14 @@ export async function eliminarComentario(req, res) {
     if (!comentario) return res.redirect("/usuario/home");
 
     if (comentario.idUsuario !== req.session.usuario.id) {
-      return res.redirect(
-        `/usuario/publicaciones/${comentario.Imagen.idPublicacion}`,
-      );
+      return res.redirect(`/publicaciones/${comentario.Imagen.idPublicacion}`);
     }
 
     const idPublicacion = comentario.Imagen.idPublicacion;
 
     await comentario.destroy();
 
-    return res.redirect(`/usuario/publicaciones/${idPublicacion}`);
+    return res.redirect(`/publicaciones/${idPublicacion}`);
   } catch (error) {
     console.error("Error al eliminar comentario:", error);
     return res.redirect("/usuario/home");

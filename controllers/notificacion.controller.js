@@ -87,9 +87,7 @@ export async function verNotificacion(req, res) {
       const publicacion = await Publicacion.findByPk(notificacion.idReferencia);
 
       if (publicacion) {
-        return res.redirect(
-          `/usuario/publicaciones/${notificacion.idReferencia}`,
-        );
+        return res.redirect(`/publicaciones/${notificacion.idReferencia}`);
       }
     }
 

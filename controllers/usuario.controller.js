@@ -8,7 +8,7 @@ import { Rol } from "../models/rol.js";
 import sharp from "sharp";
 import blobABase64 from "../helpers/blobAbase64.js";
 import crearNotificacion from "../helpers/notificaciones.helper.js";
-import { sequelize } from "../models/sync.js";
+import sequelize from "../models/config.js";
 
 function mapearPublicaciones(pubs, ocultarCopyright = false) {
   return pubs
@@ -272,7 +272,6 @@ export async function renderPerfilUsuario(req, res) {
     });
 
     const idUsuarioActual = req.session.usuario?.id ?? null;
-
     const publicaciones = mapearPublicaciones(
       publicacionesBD,
       !idUsuarioActual,

@@ -13,7 +13,7 @@ export async function mostrarFormDenunciarPublicacion(req, res) {
     if (!publicacion) return res.redirect("/usuario/home");
 
     if (publicacion.idUsuario === req.session.usuario.id) {
-      return res.redirect(`/usuario/publicaciones/${publicacion.id}`);
+      return res.redirect(`/publicaciones/${publicacion.id}`);
     }
 
     const denunciaExistente = await Denuncia.findOne({
@@ -25,7 +25,7 @@ export async function mostrarFormDenunciarPublicacion(req, res) {
     });
 
     if (denunciaExistente) {
-      return res.redirect(`/usuario/publicaciones/${publicacion.id}`);
+      return res.redirect(`/publicaciones/${publicacion.id}`);
     }
 
     res.render("usuario/denuncias/denunciarPublicacion", {
@@ -45,7 +45,7 @@ export async function crearDenunciaPublicacion(req, res) {
     if (!publicacion) return res.redirect("/usuario/home");
 
     if (publicacion.idUsuario === req.session.usuario.id) {
-      return res.redirect(`/usuario/publicaciones/${publicacion.id}`);
+      return res.redirect(`/publicaciones/${publicacion.id}`);
     }
 
     // Validar con Zod
@@ -71,7 +71,7 @@ export async function crearDenunciaPublicacion(req, res) {
     });
 
     if (denunciaExistente) {
-      return res.redirect(`/usuario/publicaciones/${publicacion.id}`);
+      return res.redirect(`/publicaciones/${publicacion.id}`);
     }
 
     await Denuncia.create({
@@ -82,7 +82,7 @@ export async function crearDenunciaPublicacion(req, res) {
       idPublicacion: publicacion.id,
     });
 
-    return res.redirect(`/usuario/publicaciones/${publicacion.id}`);
+    return res.redirect(`/publicaciones/${publicacion.id}`);
   } catch (error) {
     console.error("Error al crear denuncia:", error);
     res.redirect("/usuario/home");
@@ -98,9 +98,7 @@ export async function mostrarFormDenunciarComentario(req, res) {
     if (!comentario) return res.redirect("/usuario/home");
 
     if (comentario.idUsuario === req.session.usuario.id) {
-      return res.redirect(
-        `/usuario/publicaciones/${comentario.Imagen.idPublicacion}`,
-      );
+      return res.redirect(`/publicaciones/${comentario.Imagen.idPublicacion}`);
     }
 
     const denunciaExistente = await Denuncia.findOne({
@@ -112,9 +110,7 @@ export async function mostrarFormDenunciarComentario(req, res) {
     });
 
     if (denunciaExistente) {
-      return res.redirect(
-        `/usuario/publicaciones/${comentario.Imagen.idPublicacion}`,
-      );
+      return res.redirect(`/publicaciones/${comentario.Imagen.idPublicacion}`);
     }
 
     res.render("usuario/denuncias/denunciarComentario", {
@@ -139,7 +135,7 @@ export async function crearDenunciaComentario(req, res) {
     const idPublicacion = comentario.Imagen.idPublicacion;
 
     if (comentario.idUsuario === req.session.usuario.id) {
-      return res.redirect(`/usuario/publicaciones/${idPublicacion}`);
+      return res.redirect(`/publicaciones/${idPublicacion}`);
     }
 
     const resultado = denunciaSchema.safeParse(req.body);
@@ -164,7 +160,7 @@ export async function crearDenunciaComentario(req, res) {
     });
 
     if (denunciaExistente) {
-      return res.redirect(`/usuario/publicaciones/${idPublicacion}`);
+      return res.redirect(`/publicaciones/${idPublicacion}`);
     }
 
     await Denuncia.create({
@@ -175,7 +171,7 @@ export async function crearDenunciaComentario(req, res) {
       idComentario: comentario.id,
     });
 
-    return res.redirect(`/usuario/publicaciones/${idPublicacion}`);
+    return res.redirect(`/publicaciones/${idPublicacion}`);
   } catch (error) {
     console.error("Error al crear denuncia comentario:", error);
     res.redirect("/usuario/home");

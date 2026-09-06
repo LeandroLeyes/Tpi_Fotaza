@@ -22,7 +22,7 @@ export async function marcarInteres(req, res) {
     const idAutor = imagen.Publicacion.idUsuario;
 
     if (idUsuario === idAutor) {
-      return res.redirect(`/usuario/publicaciones/${imagen.idPublicacion}`);
+      return res.redirect(`/publicaciones/${imagen.idPublicacion}`);
     }
 
     const interesExistente = await Interes.findOne({
@@ -34,7 +34,7 @@ export async function marcarInteres(req, res) {
         where: { idInteres: interesExistente.id },
       });
       if (chat) return res.redirect(`/usuario/chat/${chat.id}`);
-      return res.redirect(`/usuario/publicaciones/${imagen.idPublicacion}`);
+      return res.redirect(`/publicaciones/${imagen.idPublicacion}`);
     }
 
     const interes = await Interes.create({ idUsuario, idImagen });

@@ -104,7 +104,7 @@ export async function crearColeccion(req, res) {
 
       if (publicacion) {
         await coleccion.addPublicacion(publicacion);
-        return res.redirect(`/usuario/publicaciones/${idPublicacion}`);
+        return res.redirect(`/publicaciones/${idPublicacion}`);
       }
     }
 
@@ -143,8 +143,7 @@ export async function agregarAColeccion(req, res) {
       },
     });
 
-    if (!coleccion)
-      return res.redirect(`/usuario/publicaciones/${idPublicacion}`);
+    if (!coleccion) return res.redirect(`/publicaciones/${idPublicacion}`);
 
     const publicacion = await Publicacion.findByPk(idPublicacion);
     if (!publicacion) return res.redirect("/usuario/home");
@@ -155,7 +154,7 @@ export async function agregarAColeccion(req, res) {
       await coleccion.addPublicacion(publicacion);
     }
 
-    return res.redirect(`/usuario/publicaciones/${idPublicacion}`);
+    return res.redirect(`/publicaciones/${idPublicacion}`);
   } catch (error) {
     console.error("Error al agregar a colección:", error);
     res.redirect("/usuario/home");
