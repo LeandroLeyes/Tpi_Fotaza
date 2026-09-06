@@ -8,31 +8,43 @@ import { Rol } from "../models/rol.js";
 import sharp from "sharp";
 import blobABase64 from "../helpers/blobAbase64.js";
 import crearNotificacion from "../helpers/notificaciones.helper.js";
+import { sequelize } from "../models/sync.js";
 
-function mapearPublicaciones(pubs) {
-  return pubs.map((pub) => {
-    const img = pub.imagenes?.[0];
+function mapearPublicaciones(pubs, ocultarCopyright = false) {
+  return pubs
+    .map((pub) => {
+      const pubJSON = pub.toJSON();
 
-    let sumaValoraciones = 0;
-    let totalValoraciones = 0;
+      let imagenes = pubJSON.imagenes || [];
 
-    pub.imagenes?.forEach((imagen) => {
-      (imagen.Valoracions || []).forEach((v) => {
-        sumaValoraciones += v.puntaje;
-        totalValoraciones++;
+      if (ocultarCopyright) {
+        imagenes = imagenes.filter((imagen) => !imagen.copyright);
+      }
+
+      const img = imagenes[0];
+
+      let sumaValoraciones = 0;
+      let totalValoraciones = 0;
+
+      imagenes.forEach((imagen) => {
+        (imagen.Valoracions || []).forEach((v) => {
+          sumaValoraciones += v.puntaje;
+          totalValoraciones++;
+        });
       });
-    });
 
-    const promedioValoraciones = (
-      totalValoraciones > 0 ? sumaValoraciones / totalValoraciones : 0
-    ).toFixed(1);
+      const promedioValoraciones = (
+        totalValoraciones > 0 ? sumaValoraciones / totalValoraciones : 0
+      ).toFixed(1);
 
-    return {
-      ...pub.toJSON(),
-      imagenBase64: img?.url ? blobABase64(img.url) : null,
-      promedioValoraciones,
-    };
-  });
+      return {
+        ...pubJSON,
+        imagenes,
+        imagenBase64: img?.url ? blobABase64(img.url) : null,
+        promedioValoraciones,
+      };
+    })
+    .filter((pub) => !ocultarCopyright || pub.imagenes.length > 0);
 }
 
 export async function mostrarHome(req, res) {
@@ -65,6 +77,31 @@ export async function mostrarHome(req, res) {
         publicaciones = mapearPublicaciones(pubs);
       }
     } else {
+      const statsImagenes = await Imagen.findAll({
+        attributes: [
+          "idPublicacion",
+          [
+            sequelize.fn("AVG", sequelize.col("Valoracions.puntaje")),
+            "promedio",
+          ],
+          [
+            sequelize.fn("COUNT", sequelize.col("Valoracions.id")),
+            "totalVotos",
+          ],
+        ],
+        include: [{ model: Valoracion, attributes: [] }],
+        group: ["Imagen.idPublicacion"],
+        raw: true,
+      });
+
+      const statsPorPublicacion = new Map();
+      statsImagenes.forEach((fila) => {
+        statsPorPublicacion.set(fila.idPublicacion, {
+          promedio: parseFloat(fila.promedio) || 0,
+          totalVotos: parseInt(fila.totalVotos, 10) || 0,
+        });
+      });
+
       const todasLasPubs = await Publicacion.findAll({
         include: [{ model: Imagen, as: "imagenes", include: [Valoracion] }],
         order: [["createdAt", "DESC"]],
@@ -72,13 +109,16 @@ export async function mostrarHome(req, res) {
 
       const mapeadas = mapearPublicaciones(todasLasPubs);
 
+      const UMBRAL_PROMEDIO = 3.5;
+      const UMBRAL_VOTOS = 3;
+
       const destacadas = mapeadas.filter((pub) => {
-        const totalVotos =
-          pub.imagenes?.reduce(
-            (acc, img) => acc + (img.Valoracions?.length || 0),
-            0,
-          ) || 0;
-        return parseFloat(pub.promedioValoraciones) >= 3.5 && totalVotos >= 3;
+        const stats = statsPorPublicacion.get(pub.id);
+        return (
+          !!stats &&
+          stats.promedio >= UMBRAL_PROMEDIO &&
+          stats.totalVotos >= UMBRAL_VOTOS
+        );
       });
 
       const normales = mapeadas.filter((pub) => !destacadas.includes(pub));
@@ -114,15 +154,13 @@ export async function mostrarHome(req, res) {
 
 export async function renderPerfil(req, res) {
   try {
-    if (req.session && req.session.usuario) {
-      const usuario = await Usuario.findByPk(req.session.usuario.id);
+    const usuario = await Usuario.findByPk(req.session.usuario.id);
 
-      const publicacionesBD = await Publicacion.findAll({
-        where: { idUsuario: usuario.id },
-        include: [{ model: Imagen, as: "imagenes", include: [Valoracion] }],
-        order: [["createdAt", "DESC"]],
-      });
-    }
+    const publicacionesBD = await Publicacion.findAll({
+      where: { idUsuario: usuario.id },
+      include: [{ model: Imagen, as: "imagenes", include: [Valoracion] }],
+      order: [["createdAt", "DESC"]],
+    });
 
     const publicaciones = mapearPublicaciones(publicacionesBD);
 
@@ -134,7 +172,7 @@ export async function renderPerfil(req, res) {
       where: { idSeguidor: usuario.id },
     });
 
-    res.render("/perfil", {
+    res.render("usuario/perfil", {
       title: usuario.username,
       perfilUsuario: {
         ...usuario.toJSON(),
@@ -233,9 +271,12 @@ export async function renderPerfilUsuario(req, res) {
       order: [["createdAt", "DESC"]],
     });
 
-    const publicaciones = mapearPublicaciones(publicacionesBD);
-
     const idUsuarioActual = req.session.usuario?.id ?? null;
+
+    const publicaciones = mapearPublicaciones(
+      publicacionesBD,
+      !idUsuarioActual,
+    );
 
     const siguiendo = idUsuarioActual
       ? await Seguimiento.findOne({

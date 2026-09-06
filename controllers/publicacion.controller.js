@@ -7,6 +7,7 @@ import { Valoracion } from "../models/valoracion.js";
 import sharp from "sharp";
 import blobABase64 from "../helpers/blobAbase64.js";
 import crearNotificacion from "../helpers/notificaciones.helper.js";
+import { Denuncia } from "../models/denuncia.js";
 
 export function mostrarFormPublicacion(req, res) {
   res.render("usuario/publicaciones/crearPublicacion", {
@@ -125,7 +126,13 @@ export async function renderPublicacion(req, res) {
       return res.redirect("/usuario/home");
     }
 
+    const usuarioActual = req.session.usuario || null;
+
     const pub = publicacion.toJSON();
+
+    if (!usuarioActual) {
+      pub.imagenes = (pub.imagenes || []).filter((img) => !img.copyright);
+    }
 
     pub.imagenes = pub.imagenes.map((img) => ({
       ...img,
@@ -145,10 +152,8 @@ export async function renderPublicacion(req, res) {
     };
 
     if (!pub.imagenes || pub.imagenes.length === 0) {
-      return res.redirect("/usuario/home");
+      return res.redirect(usuarioActual ? "/usuario/home" : "/");
     }
-
-    const usuarioActual = req.session.usuario || null;
 
     const esPropietario =
       usuarioActual && publicacion.idUsuario === usuarioActual.id;
@@ -307,6 +312,19 @@ export async function mostrarFormEditar(req, res) {
       return res.redirect(`/usuario/publicaciones/${publicacion.id}`);
     }
 
+    const tieneDenunciasPendientes =
+      (await Denuncia.count({
+        where: {
+          idPublicacion: publicacion.id,
+          tipo: "publicacion",
+          idValidador: null,
+        },
+      })) > 0;
+
+    if (tieneDenunciasPendientes) {
+      return res.redirect(`/usuario/publicaciones/${publicacion.id}`);
+    }
+
     const pub = publicacion.toJSON();
     pub.imagenes = pub.imagenes.map((img) => ({
       ...img,
@@ -350,6 +368,21 @@ export async function editarPublicacion(req, res) {
         formValues: req.body,
       });
     };
+
+    const tieneDenunciasPendientes =
+      (await Denuncia.count({
+        where: {
+          idPublicacion: publicacion.id,
+          tipo: "publicacion",
+          idValidador: null,
+        },
+      })) > 0;
+
+    if (tieneDenunciasPendientes) {
+      return res.redirect(
+        `/usuario/publicaciones/${publicacion.id}?error=denuncia`,
+      );
+    }
 
     const { editarPublicacionSchema } =
       await import("../schemas/validaciones.js");

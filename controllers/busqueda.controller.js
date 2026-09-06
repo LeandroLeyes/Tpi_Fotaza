@@ -25,6 +25,8 @@ export async function buscarContenido(req, res) {
       });
     }
 
+    const haySesion = !!(req.session && req.session.usuario);
+
     const rolUsuarioComun = await Rol.findOne({ where: { nombre: "usuario" } });
 
     let usuariosIdsValidos = [];
@@ -89,30 +91,38 @@ export async function buscarContenido(req, res) {
       distinct: true,
     });
 
-    const publicaciones = publicacionesDB.map((publicacion) => {
-      const pub = publicacion.toJSON();
+    const publicaciones = publicacionesDB
+      .map((publicacion) => {
+        const pub = publicacion.toJSON();
 
-      const imagen = pub.imagenes[0];
+        let imagenes = pub.imagenes || [];
+        if (!haySesion) {
+          imagenes = imagenes.filter((img) => !img.copyright);
+        }
 
-      const promedioValoraciones =
-        imagen?.Valoracions?.length > 0
-          ? (
-              imagen.Valoracions.reduce(
-                (total, valoracion) => total + valoracion.puntaje,
-                0,
-              ) / imagen.Valoracions.length
-            ).toFixed(1)
-          : 0;
+        const imagen = imagenes[0];
 
-      const cantidadComentarios = imagen?.Comentarios?.length || 0;
+        const promedioValoraciones =
+          imagen?.Valoracions?.length > 0
+            ? (
+                imagen.Valoracions.reduce(
+                  (total, valoracion) => total + valoracion.puntaje,
+                  0,
+                ) / imagen.Valoracions.length
+              ).toFixed(1)
+            : 0;
 
-      return {
-        ...pub,
-        imagenBase64: imagen ? blobABase64(imagen.url) : null,
-        promedioValoraciones,
-        cantidadComentarios,
-      };
-    });
+        const cantidadComentarios = imagen?.Comentarios?.length || 0;
+
+        return {
+          ...pub,
+          imagenes,
+          imagenBase64: imagen ? blobABase64(imagen.url) : null,
+          promedioValoraciones,
+          cantidadComentarios,
+        };
+      })
+      .filter((pub) => haySesion || pub.imagenes.length > 0);
 
     usuarios.forEach((usuario) => {
       usuario.avatar = blobABase64(usuario.avatar);

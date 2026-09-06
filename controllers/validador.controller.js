@@ -3,7 +3,6 @@ import { Publicacion } from "../models/publicacion.js";
 import { Comentario } from "../models/comentario.js";
 import { Imagen } from "../models/imagen.js";
 import { Usuario } from "../models/usuario.js";
-import { Etiqueta } from "../models/etiqueta.js";
 import { Op } from "sequelize";
 import sharp from "sharp";
 import blobABase64 from "../helpers/blobAbase64.js";
@@ -15,10 +14,7 @@ export async function mostrarHomeValidador(req, res) {
       include: [
         {
           model: Publicacion,
-          include: [
-            { model: Usuario },
-            { model: Imagen, as: "imagenes" },
-          ],
+          include: [{ model: Usuario }, { model: Imagen, as: "imagenes" }],
         },
         { model: Usuario, as: "denunciante" },
       ],
@@ -29,7 +25,6 @@ export async function mostrarHomeValidador(req, res) {
       if (!denuncia.Publicacion) continue;
       const id = denuncia.idPublicacion;
       if (!publicacionesMap.has(id)) {
-        // Convertir imagenes a base64 para el modal
         const pub = denuncia.Publicacion.toJSON();
         pub.imagenes = (pub.imagenes || []).map((img) => ({
           ...img,
@@ -44,11 +39,10 @@ export async function mostrarHomeValidador(req, res) {
       publicacionesMap.get(id).denuncias.push(denuncia);
     }
 
-    // Cambiar >= 3 antes de entregar (>= 1 para pruebas)
     const publicacionesPendientes = [...publicacionesMap.values()].filter(
       ({ denuncias }) => {
         const usuariosUnicos = new Set(denuncias.map((d) => d.idUsuario));
-        return usuariosUnicos.size >= 1;
+        return usuariosUnicos.size > 3; //cantidad de denuncias de usuarios distintos
       },
     );
 
@@ -80,7 +74,6 @@ export async function darDeBajaPublicacion(req, res) {
 
     if (!publicacion) return res.redirect("/validador/home");
 
-    // Marcar denuncias como resueltas
     await Denuncia.update(
       { idValidador: req.session.usuario.id },
       { where: { idPublicacion: publicacion.id, tipo: "publicacion" } },
@@ -88,7 +81,6 @@ export async function darDeBajaPublicacion(req, res) {
 
     await publicacion.destroy();
 
-    // Contar publicaciones bajadas del autor (soft deleted)
     const publicacionesBajadas = await Publicacion.count({
       where: {
         idUsuario: publicacion.idUsuario,
@@ -97,7 +89,6 @@ export async function darDeBajaPublicacion(req, res) {
       paranoid: false,
     });
 
-    // Bloquear cuenta si llega a 3 publicaciones bajadas
     if (publicacionesBajadas >= 3) {
       await Usuario.update(
         { activo: false },
@@ -174,20 +165,13 @@ export async function desestimarDenunciaComentario(req, res) {
 
 export async function bloquearUsuario(req, res) {
   try {
-    await Usuario.update(
-      { activo: false },
-      { where: { id: req.params.id } },
-    );
+    await Usuario.update({ activo: false }, { where: { id: req.params.id } });
     return res.redirect("/validador/home");
   } catch (error) {
     console.error("Error al bloquear usuario:", error);
     res.redirect("/validador/home");
   }
 }
-
-// ─────────────────────────────────────────────
-// PERFIL DEL VALIDADOR
-// ─────────────────────────────────────────────
 
 export async function mostrarPerfilValidador(req, res) {
   try {
