@@ -80,7 +80,6 @@ usuario.post(
   ),
   crearPublicacion,
 );
-usuario.get("/publicaciones/:id", renderPublicacion);
 usuario.post("/publicaciones/:id/comentarios", cambiarEstadoComentarios);
 usuario.post("/publicaciones/:id/eliminar", eliminarPublicacion);
 usuario.get("/publicaciones/:id/editar", mostrarFormEditar);

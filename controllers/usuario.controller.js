@@ -114,13 +114,15 @@ export async function mostrarHome(req, res) {
 
 export async function renderPerfil(req, res) {
   try {
-    const usuario = await Usuario.findByPk(req.session.usuario.id);
+    if (req.session && req.session.usuario) {
+      const usuario = await Usuario.findByPk(req.session.usuario.id);
 
-    const publicacionesBD = await Publicacion.findAll({
-      where: { idUsuario: usuario.id },
-      include: [{ model: Imagen, as: "imagenes", include: [Valoracion] }],
-      order: [["createdAt", "DESC"]],
-    });
+      const publicacionesBD = await Publicacion.findAll({
+        where: { idUsuario: usuario.id },
+        include: [{ model: Imagen, as: "imagenes", include: [Valoracion] }],
+        order: [["createdAt", "DESC"]],
+      });
+    }
 
     const publicaciones = mapearPublicaciones(publicacionesBD);
 
@@ -132,7 +134,7 @@ export async function renderPerfil(req, res) {
       where: { idSeguidor: usuario.id },
     });
 
-    res.render("usuario/perfil", {
+    res.render("/perfil", {
       title: usuario.username,
       perfilUsuario: {
         ...usuario.toJSON(),
@@ -220,8 +222,6 @@ export async function renderPerfilUsuario(req, res) {
       include: [{ model: Rol }],
     });
 
-    if (!usuario) return res.redirect("/usuario/home");
-
     const rolUsuario = usuario.Rols?.[0]?.nombre;
     if (rolUsuario === "validador" || rolUsuario === "admin") {
       return res.redirect("/usuario/home");
@@ -235,12 +235,13 @@ export async function renderPerfilUsuario(req, res) {
 
     const publicaciones = mapearPublicaciones(publicacionesBD);
 
-    const siguiendo = await Seguimiento.findOne({
-      where: {
-        idSeguidor: req.session.usuario.id,
-        idSeguido: usuario.id,
-      },
-    });
+    const idUsuarioActual = req.session.usuario?.id ?? null;
+
+    const siguiendo = idUsuarioActual
+      ? await Seguimiento.findOne({
+          where: { idSeguidor: idUsuarioActual, idSeguido: usuario.id },
+        })
+      : null;
 
     const cantidadSeguidores = await Seguimiento.count({
       where: { idSeguido: usuario.id },
@@ -257,8 +258,9 @@ export async function renderPerfilUsuario(req, res) {
         avatar: blobABase64(usuario.avatar),
       },
       publicaciones,
-      esMiPerfil: false,
+      esMiPerfil: idUsuarioActual === usuario.id,
       siguiendo: !!siguiendo,
+      sesionIniciada: !!idUsuarioActual,
       cantidadPublicaciones: publicaciones.length,
       cantidadSeguidores,
       cantidadSeguidos,

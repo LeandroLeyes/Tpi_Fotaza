@@ -6,27 +6,41 @@
 
       img(src="/images/fotaza-logo-1.png" width="50px")
 
-  .sidebar-menu
+  if usuario
 
-    a.sidebar-link(href="/usuario/home" class= isActive("/usuario/home") ? "active" : "")
-      i.bi.bi-house
+    .sidebar-menu
 
-    a.sidebar-link(href="/usuario/colecciones" class=isActive("/usuario/colecciones") ? "active" : "")
-      i.bi.bi-collection
+      a.sidebar-link(href="/usuario/home" class= isActive("/usuario/home") ? "active" : "")
+        i.bi.bi-house
 
-    a.sidebar-link(href="/usuario/publicaciones/crear"  class=isActive("/usuario/publicaciones/crear") ? "active" : "")
-      i.bi.bi-plus-square
+      a.sidebar-link(href="/usuario/colecciones" class=isActive("/usuario/colecciones") ? "active" : "")
+        i.bi.bi-collection
 
-    a.sidebar-link.position-relative(href="/usuario/notificaciones")
-        i.bi.bi-bell
+      a.sidebar-link(href="/usuario/publicaciones/crear"  class=isActive("/usuario/publicaciones/crear") ? "active" : "")
+        i.bi.bi-plus-square
 
-        if hayNotificacionesNoLeidas
-            span.notification-dot
+      a.sidebar-link.position-relative(href="/usuario/notificaciones")
+          i.bi.bi-bell
 
-    a.sidebar-link(href="/usuario/chat" class=isActive("/usuario/chat") ? "active" : "")
-      i.bi.bi-chat-dots
+          if hayNotificacionesNoLeidas
+              span.notification-dot
 
-  .sidebar-bottom
+      a.sidebar-link(href="/usuario/chat" class=isActive("/usuario/chat") ? "active" : "")
+        i.bi.bi-chat-dots
 
-    a.sidebar-link(href="#" class=isActive("/usuario/configuracion") ? "active" : "")
-      i.bi.bi-gear
+    .sidebar-bottom
+
+      a.sidebar-link(href="#" class=isActive("/usuario/configuracion") ? "active" : "")
+        i.bi.bi-gear
+
+  else
+
+    .sidebar-menu
+
+      a.sidebar-link(href="/auth/login" title="Iniciar sesión")
+        i.bi.bi-box-arrow-in-right
+
+    .sidebar-bottom
+
+      a.sidebar-link(href="/auth/register" title="Registrarse")
+        i.bi.bi-person-plus

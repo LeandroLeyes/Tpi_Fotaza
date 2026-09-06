@@ -22,7 +22,7 @@ header.topbar
               src=usuario.avatar,
               alt="avatar"
             )
-          
+
           else
             .avatar-placeholder.rounded-circle.shadow(style="width: 42px; height: 42px; font-size: 18px")= usuario.name[0].toUpperCase()+usuario.lastName[0].toUpperCase()
 
@@ -42,3 +42,13 @@ header.topbar
               href="/auth/logout"
             )
               | Cerrar sesión
+
+    else
+
+      .d-flex.gap-2
+
+        a.btn.btn-outline-success.rounded-pill.px-3(href="/auth/login")
+          | Iniciar sesión
+
+        a.btn.btn-success.rounded-pill.px-3(href="/auth/register")
+          | Registrarse

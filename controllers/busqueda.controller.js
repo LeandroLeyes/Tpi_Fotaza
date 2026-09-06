@@ -16,7 +16,13 @@ export async function buscarContenido(req, res) {
     const filtro = req.query.filtro || "todo";
 
     if (!termino) {
-      return res.redirect("/usuario/home");
+      if (req.session && req.session.usuario) {
+        return res.redirect("/usuario/home");
+      }
+
+      return res.render("landing/index", {
+        title: "Fotaza",
+      });
     }
 
     const rolUsuarioComun = await Rol.findOne({ where: { nombre: "usuario" } });

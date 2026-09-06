@@ -14,7 +14,7 @@ block content
 
                         if perfilUsuario.avatar
 
-                            img.rounded-circle.shadow( src=perfilUsuario.avatar style="object-fit: cover;")
+                            img.rounded-circle.shadow(src=perfilUsuario.avatar style="object-fit: cover;")
 
                         else
 
@@ -39,18 +39,18 @@ block content
                             .stat
                                 h4= cantidadSeguidos
                                 span Siguiendo
-                        
-                        .bio 
-                            h5= perfilUsuario.bio 
 
-                        if esMiPerfil || perfilUsuario.id === usuario.id
+                        .bio
+                            h5= perfilUsuario.bio
+
+                        if esMiPerfil
 
                             a.btn.btn-outline-success(
                                 href="/usuario/perfil/editar"
                             )
-                                | Editar 
+                                | Editar
 
-                        else
+                        else if sesionIniciada
 
                             if siguiendo
 
@@ -75,6 +75,13 @@ block content
                                         type="submit"
                                     )
                                         | Seguir
+
+                        else
+
+                            a.btn.btn-success(
+                                href="/auth/login"
+                            )
+                                | Iniciar sesión para seguir
 
         h4.mb-4 Publicaciones
 

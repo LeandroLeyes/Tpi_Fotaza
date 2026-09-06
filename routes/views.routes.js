@@ -16,7 +16,7 @@ const router = Router();
 router.use("/", landingRoutes);
 router.use("/auth", authRoutes);
 router.use("/usuario", usuarioRoutes);
-router.use("/buscar", busquedaRoutes);
+//router.use("/buscar", busquedaRoutes);
 router.use("/denuncia", denunciaRoutes);
 router.use("/validador", validadorRoutes);
 router.use("/usuario/notificaciones", notificacionRoutes);

@@ -148,13 +148,17 @@ export async function renderPublicacion(req, res) {
       return res.redirect("/usuario/home");
     }
 
-    const esPropietario = publicacion.idUsuario === req.session.usuario.id;
+    const usuarioActual = req.session.usuario || null;
+
+    const esPropietario =
+      usuarioActual && publicacion.idUsuario === usuarioActual.id;
 
     res.render("usuario/publicaciones/verPublicacion", {
       title: pub.titulo,
       publicacion: pub,
       esPropietario,
-      miUsuarioId: req.session.usuario.id,
+      miUsuarioId: usuarioActual ? usuarioActual.id : null,
+      sesionIniciada: !!usuarioActual,
     });
   } catch (error) {
     console.error(error);

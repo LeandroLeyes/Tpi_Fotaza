@@ -12,6 +12,12 @@ block content
 
         span Fotaza
 
+      form.search-container(action="/buscar",method="GET")
+
+        i.bi.bi-search.search-icon
+
+        input.search-input(type="search", name="q", placeholder="Buscar...")
+
       .landing-buttons.d-flex.gap-3
 
         a.btn.login-btn.rounded-pill.px-4(href="auth/login")
