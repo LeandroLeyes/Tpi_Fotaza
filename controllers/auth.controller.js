@@ -53,6 +53,7 @@ export async function inicioSesion(req, res) {
     const usuario = await Usuario.findOne({
       where: { email },
       include: [{ model: Rol }],
+      paranoid: false,
     });
 
     if (!usuario) {
@@ -62,19 +63,21 @@ export async function inicioSesion(req, res) {
       });
     }
 
+    if (usuario.deletedAt !== null) {
+      return res.status(400).render("auth/login", {
+        errores: {
+          general:
+            "Tu cuenta ha sido suspendida permanentemente por acumular 3 publicaciones dadas de baja.",
+        },
+        formValues: req.body,
+      });
+    }
+
     const isValidated = await usuario.validatePassword(password);
 
     if (!isValidated) {
       return res.status(400).render("auth/login", {
         errores: { general: "Usuario o contraseña incorrectos" },
-        formValues: req.body,
-      });
-    }
-
-    // Solo bloquear si activo es explícitamente false (no null ni undefined)
-    if (usuario.activo === false) {
-      return res.status(400).render("auth/login", {
-        errores: { general: "Tu cuenta ha sido suspendida. Contactá al administrador." },
         formValues: req.body,
       });
     }

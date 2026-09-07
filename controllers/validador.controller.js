@@ -74,6 +74,8 @@ export async function darDeBajaPublicacion(req, res) {
 
     if (!publicacion) return res.redirect("/validador/home");
 
+    const idAutor = publicacion.idUsuario;
+
     await Denuncia.update(
       { idValidador: req.session.usuario.id },
       { where: { idPublicacion: publicacion.id, tipo: "publicacion" } },
@@ -83,17 +85,17 @@ export async function darDeBajaPublicacion(req, res) {
 
     const publicacionesBajadas = await Publicacion.count({
       where: {
-        idUsuario: publicacion.idUsuario,
+        idUsuario: idAutor,
         deletedAt: { [Op.ne]: null },
       },
       paranoid: false,
     });
 
     if (publicacionesBajadas >= 3) {
-      await Usuario.update(
-        { activo: false },
-        { where: { id: publicacion.idUsuario } },
-      );
+      const usuarioAutor = await Usuario.findByPk(idAutor);
+      if (usuarioAutor) {
+        await usuarioAutor.destroy();
+      }
     }
 
     return res.redirect("/validador/home");
