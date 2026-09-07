@@ -65,22 +65,28 @@ block content
             .invalid-feedback #{errores.email}
 
         .mb-3
-          input.form-control.auth-input(
-            type="password",
-            name="password",
-            placeholder="Contraseña",
-            class= errores && errores.password ? 'is-invalid' : ''
-          )
+          .input-group
+            input.form-control.auth-input#password(
+              type="password",
+              name="password",
+              placeholder="Contraseña",
+              class= errores && errores.password ? 'is-invalid' : ''
+            )
+            button.btn.btn-outline-secondary.auth-input(type="button", onclick="verPassword('password', 'toggleIcon')")
+              i.bi.bi-eye-slash#toggleIcon
           if errores && errores.password
             .invalid-feedback #{errores.password}
 
         .mb-4
-          input.form-control.auth-input(
-            type="password",
-            name="confirmPassword",
-            placeholder="Confirme la contraseña",
-            class= errores && errores.confirmPassword ? 'is-invalid' : ''
-          )
+          .input-group
+            input.form-control.auth-input#confirmPassword(
+              type="password",
+              name="confirmPassword",
+              placeholder="Confirmar Contraseña",
+              class= errores && errores.confirmPassword ? 'is-invalid' : ''
+            )
+            button.btn.btn-outline-secondary.auth-input(type="button", onclick="verPassword('confirmPassword', 'toggleIcon2')")
+              i.bi.bi-eye-slash#toggleIcon2
           if errores && errores.confirmPassword
             .invalid-feedback #{errores.confirmPassword}
 
@@ -89,3 +95,5 @@ block content
       .text-center.mt-4
         span.text-muted ¿Ya tienes cuenta?
         a.ms-2.auth-link(href="/auth/login") Inicia sesión
+
+      script(src="/js/password.js")

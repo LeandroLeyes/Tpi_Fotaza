@@ -146,6 +146,10 @@ export async function verChat(req, res) {
 
     const json = chat.toJSON();
 
+    if (json.Intere) {
+      json.Interes = json.Intere;
+    }
+
     if (json.emisor?.avatar)
       json.emisor.avatar = blobABase64(json.emisor.avatar);
     if (json.destino?.avatar)
@@ -160,8 +164,16 @@ export async function verChat(req, res) {
       },
     }));
 
-    if (json.Interes?.Imagen?.url) {
+    if (json.Interes && json.Interes.Imagen && json.Interes.Imagen.url) {
       json.Interes.Imagen.imagenBase64 = blobABase64(json.Interes.Imagen.url);
+
+      console.log("¡ÉXITO! La imagen se convirtió correctamente para el chat.");
+    } else {
+      console.log("Fallo en la validación. Valores:", {
+        tieneInteres: !!json.Interes,
+        tieneImagen: !!json.Interes?.Imagen,
+        tieneUrl: !!json.Interes?.Imagen?.url,
+      });
     }
 
     const otroUsuario =

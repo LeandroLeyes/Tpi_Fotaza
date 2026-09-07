@@ -648,6 +648,24 @@ button.btn.btn-light {
     font-size: 52px;
 }
 
+/* Chat */
+.chat-bubble {
+    padding: 8px 14px;
+    border-radius: 18px;
+    word-break: break-word;
+}
+
+.chat-bubble-mio {
+    background-color: #636B2F;
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+.chat-bubble-otro {
+    background-color: #f0f0f0;
+    color: #333;
+    border-bottom-left-radius: 4px;
+}
 
 /* Responsive */
 

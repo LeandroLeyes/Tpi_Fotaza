@@ -32,11 +32,11 @@ block content
               placeholder="Contraseña",
               class= errores && errores.password ? 'is-invalid' : ''
             )
-            button.btn.btn-outline-secondary.auth-input(type="button", onclick="verPassword()")
+            button.btn.btn-outline-secondary.auth-input(type="button", onclick="verPassword('password', 'toggleIcon')")
               i.bi.bi-eye-slash#toggleIcon
-          
-          if errores && errores.password
-            .invalid-feedback.d-block #{errores.password}
+                  
+                  if errores && errores.password
+                    .invalid-feedback.d-block #{errores.password}
 
         button.btn.auth-btn.w-100(type="submit") Iniciar sesión
 
