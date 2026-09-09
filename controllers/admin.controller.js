@@ -42,10 +42,10 @@ export async function crearValidador(req, res) {
       idRol: rolValidador.id,
     });
 
-    return res.redirect("/admin/usuarios");
+    return res.redirect("/admin/validadores");
   } catch (error) {
     console.error("Error al crear validador:", error);
-    res.redirect("/admin/usuarios");
+    res.redirect("/admin/validadores");
   }
 }
 

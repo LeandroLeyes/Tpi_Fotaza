@@ -32,14 +32,31 @@ export async function registroUsuario(req, res) {
       });
     }
 
-    await Usuario.create({ name, lastName, username, email, password });
+    const nuevoUsuario = await Usuario.create({
+      name,
+      lastName,
+      username,
+      email,
+      password,
+    });
+
+    const rolUsuario = await Rol.findOne({ where: { nombre: "usuario" } });
+
+    if (rolUsuario) {
+      await nuevoUsuario.addRol(rolUsuario);
+    } else {
+      console.error(
+        "Advertencia: No se encontro el rol 'usuario' en la base de datos.",
+      );
+    }
 
     return res.redirect("/auth/login");
   } catch (error) {
-    console.error(error);
+    console.error("Error en registroUsuario:", error);
+
     return res.status(500).render("auth/register", {
       errores: {
-        general: "Hubo un error al crear el usuario. Intentá de nuevo.",
+        general: "Hubo un error al crear el usuario. Intenta de nuevo.",
       },
       formValues: req.body,
     });
